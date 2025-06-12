@@ -1,4 +1,5 @@
 const express = require('express');
+const getHomePage = require('../controller/appcontroller');
 const router = express.Router();
 
 
@@ -6,9 +7,7 @@ const router = express.Router();
 
 
 // post routes
-router.post('/registered', (req, res) => {
-    res.send('Registered');
-});
+router.post('/registered', getHomePage);
 
 router.post('/registratemail',(req, res) =>{
     res.send("registred email")
