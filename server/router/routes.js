@@ -10,7 +10,6 @@ const {
   createreset,
   updateUser,
   resetPassword,
-
 } = require("../controller/appcontroller");
 const router = express.Router();
 
@@ -36,5 +35,5 @@ router.get("/createreset", createreset);
 // put router
 router.put("/updateUser", updateUser);
 
-router.put("/resetPassword",resetPassword);
+router.put("/resetPassword", resetPassword);
 module.exports = router;
