@@ -1,16 +1,5 @@
 const express = require("express");
-const {
-  registered,
-  login,
-  registratemail,
-  authenticate,
-  user,
-  generateOTP,
-  vertifyOTP,
-  createreset,
-  updateUser,
-  resetPassword,
-} = require("../controller/appcontroller");
+const { registered, registratemail, login, user, generateOTP, vertifyOTP, createreset, updateUser, resetPassword } = require("../controller/appcontroller");
 const router = express.Router();
 
 // put routes
@@ -22,7 +11,8 @@ router.post("/registratemail", registratemail);
 
 router.post("/login", login);
 
-router.post("/authenticate", authenticate);
+router.post("/authenticate", (req,res) =>
+res.send(""));
 
 // get routes
 

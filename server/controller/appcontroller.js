@@ -1,12 +1,78 @@
+const UserModel = require('../model/User.model');
+const bcrypt = require("bcrypt")
+const jwt = require("jsonwebtoken");
+
+const JWT_SECRET = "thisIsYourSuperSecretKey123!";
+
+
+
+// middle ware to verifie user
+const verefyUser = async(req,res,next) =>{
+
+}
+
+
+
 // for registered  api http://localhost:8000/api/registered
-const registered = (req, res) => {
-  res.status(200).send("Welcome to the Home Page!");
-};
+const registered = async(req, res) => {
+  try {
+    const { username,password,email,profile}  = req.body;
+    
+    const existUsername = await UserModel.findOne({username});
+    if(existUsername){
+      return res.status(400).send({ error:"PLease use Unique Username"});
+    }
+    const existEmail = await UserModel.findOne({email});
+    if(existEmail){
+      return res.status(400).send({ error:"please use unique Email"});
+    }
+
+    if(!password){
+      return res.status(400).send({ error:"Password is required !!"})
+    }
+
+    const hashedPassword = await bcrypt.hash(password,10);
+    const user = new UserModel({
+      username,
+      password:hashedPassword,
+      profile: profile || "",
+      email,
+    })
+
+     await  user.save();
+     res.status(201).send({msg : "User Registered Successfuly"})
+  } catch (error) {
+    res.status(500).send({error: error.message  || "Registered Failed"})
+  }
+  };
 
 // for login api http://localhost:8080/api/login
 
-const login = (req, res) => {
-  res.status(200).send("login page");
+const login = async(req, res) => {
+  try {
+    const {username,password} = req.body;
+
+    const user = await UserModel.findOne({ username })
+    if(!user){
+      return res.status(404).send({error: "User not found"})
+    }
+
+    const isPasswordVaild = await bcrypt.compare(password,user.password);
+    if(!isPasswordVaild){
+      return res.status(401).send({ error : "Invalid password"})
+    }
+
+    const token = jwt.sign(
+      { userId: user._id, username: user.username },
+      process.env.JWT_SECRET || JWT_SECRET,
+      { expiresIn: '24h' }
+    );
+
+    res.status(200).send({msg:"Login Successful",username: user.username , token});
+
+  } catch (error) {
+    res.status(500).send({ error :  error.message || "Login failed"});
+  }
 };
 
 // for login api http://localhost:8080/api/registratemail
@@ -14,10 +80,7 @@ const registratemail = (req, res) => {
   res.status(200).send("registratemail page");
 };
 
-// for login api http://localhost:8080/api/authenticate
-const authenticate = (req, res) => {
-  res.status(200).send("authenticate page");
-};
+
 
 // for login api http://localhost:8080/api/user/exampl121
 const user = (req, res) => {
@@ -48,7 +111,6 @@ module.exports = {
   registered,
   login,
   registratemail,
-  authenticate,
   user,
   generateOTP,
   vertifyOTP,
