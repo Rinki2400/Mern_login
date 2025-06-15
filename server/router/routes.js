@@ -1,5 +1,5 @@
 const express = require("express");
-const { registered, registratemail, login, user, generateOTP, vertifyOTP, createreset, updateUser, resetPassword } = require("../controller/appcontroller");
+const { registered, registratemail, login, user, generateOTP, vertifyOTP, createreset, updateUser, resetPassword, verefyUser } = require("../controller/appcontroller");
 const router = express.Router();
 
 // put routes
@@ -9,7 +9,7 @@ router.post("/registered", registered);
 
 router.post("/registratemail", registratemail);
 
-router.post("/login", login);
+router.post("/login", verefyUser, login);
 
 router.post("/authenticate", (req,res) =>
 res.send(""));
