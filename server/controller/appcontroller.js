@@ -9,7 +9,7 @@ const verefyUser = async (req, res, next) => {
   try {
     const {username} = req.method === "GET" ? req.query : req.body;
     //validate input
-    const exist = await username.findOne({username})
+    const exist = await UserModel.findOne({username})
     if(!exist){
       return res.status(400).send({error :"Can't find User !"});
       next();
@@ -18,7 +18,6 @@ const verefyUser = async (req, res, next) => {
     return  res.status(404).send({error:"Authentication error"})
   }
 };
-
 
 // for registered  api http://localhost:8000/api/registered
 const registered = async (req, res) => {
