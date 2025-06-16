@@ -91,7 +91,7 @@ const registratemail = (req, res) => {
 };
 
 // for login api http://localhost:8080/api/user/exampl121
-const getUser =  async(req, res)=>{
+const getUser = async (req, res) => {
   try {
     const { username } = req.params;
 
@@ -99,21 +99,19 @@ const getUser =  async(req, res)=>{
       return res.status(400).send({ error: "Invalid Username" });
     }
 
-    const user = await UserModel.findOne({ username });
+    const user = await UserModel.findOne({ username }).lean();
+    delete user.password;
 
     if (!user) {
       return res.status(404).send({ error: "Couldn't Find the User" });
     }
 
-    // Remove password field before sending the response
-    const { password, ...rest } = user.toObject(); // toObject() is clearer than toJSON()
-
-    return res.status(200).send(rest);
+    return res.status(200).send(user);
   } catch (error) {
     console.error("Error fetching user:", error);
     return res.status(500).send({ error: "Internal Server Error" });
   }
-}
+};
 // for login api http://localhost:8080/api/generateOTP
 const generateOTP = (req, res) => {
   res.status(200).send("generateOTP page");
@@ -127,10 +125,26 @@ const vertifyOTP = (req, res) => {
 const createreset = (req, res) => {
   res.status(200).send("createreset page");
 };
-// for login api http://localhost:8080/api/updateUser
-const updateUser = (req, res) => {
-  res.status(200).send("updateUser page");
+
+// for login api http://localhost:8080/api/updateUser/:id
+const updateUser = async (req, res) => {
+  try {
+    const updatedUser = await UserModel.findByIdAndUpdate(
+      req.params.id,         // ID from URL
+      req.body,              // Updated data
+      { new: true }          // Return the updated document
+    );
+
+    if (!updatedUser) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    res.json(updatedUser);
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error });
+  }
 };
+
 // for login api http://localhost:8080/api/resetPassword
 const resetPassword = (req, res) => {
   res.status(200).send("resetPassword page");
@@ -145,4 +159,5 @@ module.exports = {
   createreset,
   updateUser,
   resetPassword,
-verifyUser};
+  verifyUser,
+};

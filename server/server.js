@@ -3,7 +3,6 @@ const cors = require('cors');
 const morgan = require('morgan');
 const connect = require('./database/connection.js');
 const router = require('./router/routes.js');
-
 require('dotenv').config();
 
 const app = express();
