@@ -1,5 +1,5 @@
 const express = require("express");
-const { registered, registratemail, login, getuser, generateOTP, vertifyOTP, createreset, updateUser, resetPassword, verifyUser } = require("../controller/appcontroller");
+const { registered, registratemail, login, getUser, generateOTP, vertifyOTP, createreset, updateUser, resetPassword, verifyUser } = require("../controller/appcontroller");
 const router = express.Router();
 
 // put routes
@@ -16,7 +16,7 @@ res.send(""));
 
 // get routes
 
-router.get("/user/:username", getuser);
+router.get("/user/:username", getUser);
 router.get("/generateOTP", generateOTP);
 router.get("/vertifyOTP", vertifyOTP);
 

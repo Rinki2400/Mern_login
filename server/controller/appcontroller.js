@@ -91,23 +91,29 @@ const registratemail = (req, res) => {
 };
 
 // for login api http://localhost:8080/api/user/exampl121
-const getuser = async (req, res) => {
+const getUser =  async(req, res)=>{
   try {
-    const {username} = req.params;
-    if(!username){
-      return res.status(501).send({error:"Invalid Username"})
-    }
-    const user = await UserModel.findOne({username});
-    if(!user){
-      return res.status(404).send({error:"User not Found"})
+    const { username } = req.params;
 
+    if (!username) {
+      return res.status(400).send({ error: "Invalid Username" });
     }
-    return res.status(200).send(user)
 
+    const user = await UserModel.findOne({ username });
+
+    if (!user) {
+      return res.status(404).send({ error: "Couldn't Find the User" });
+    }
+
+    // Remove password field before sending the response
+    const { password, ...rest } = user.toObject(); // toObject() is clearer than toJSON()
+
+    return res.status(200).send(rest);
   } catch (error) {
-    return res.status(404).send({error:"Canot Find User Data"})
+    console.error("Error fetching user:", error);
+    return res.status(500).send({ error: "Internal Server Error" });
   }
-};
+}
 // for login api http://localhost:8080/api/generateOTP
 const generateOTP = (req, res) => {
   res.status(200).send("generateOTP page");
@@ -133,7 +139,7 @@ module.exports = {
   registered,
   login,
   registratemail,
-  getuser,
+  getUser,
   generateOTP,
   vertifyOTP,
   createreset,
