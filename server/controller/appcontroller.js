@@ -73,7 +73,7 @@ const login = async (req, res) => {
 
     const token = jwt.sign(
       { userId: user._id, username: user.username },
-      process.env.JWT_SECRET || JWT_SECRET,
+      JWT_SECRET,
       { expiresIn: "24h" }
     );
 
@@ -129,19 +129,23 @@ const createreset = (req, res) => {
 // for login api http://localhost:8080/api/updateUser/:id
 const updateUser = async (req, res) => {
   try {
+    if (req.user.userId !== req.params.id) {
+      return res.status(403).json({ error: "Unauthorized update attempt" });
+    }
+
     const updatedUser = await UserModel.findByIdAndUpdate(
-      req.params.id,         // ID from URL
-      req.body,              // Updated data
-      { new: true }          // Return the updated document
+      req.params.id,
+      req.body,
+      { new: true }
     );
 
     if (!updatedUser) {
-      return res.status(404).json({ message: 'User not found' });
+      return res.status(404).json({ message: "User not found" });
     }
 
-    res.send({msg:"Record Updated"});
+    res.send({ msg: "Record Updated" });
   } catch (error) {
-    res.status(500).json({ message: 'Server error', error });
+    res.status(500).json({ message: "Server error", error });
   }
 };
 

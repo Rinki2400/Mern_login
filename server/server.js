@@ -6,7 +6,7 @@ const router = require('./router/routes.js');
 require('dotenv').config();
 
 const app = express();
-const port = 8000;
+const port = 8080;
 
 // Middleware
 app.use(express.json());
