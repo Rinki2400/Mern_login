@@ -1,7 +1,7 @@
 const nodemailer = require("nodemailer");
 const Mailgen = require("mailgen");
 
-const ENV = require("../config").default;
+const {ENV} = require("../config").default;
 
 // Configure the email transporter
 const nodeConfig = {
@@ -33,7 +33,7 @@ const MailGenerator = new Mailgen({
  *   "subject": "",
  * }
  */
-const registerMail = async (req, res) => {
+ const registerMail = async (req, res) => {
   try {
     const { username, userEmail, text, subject } = req.body;
 

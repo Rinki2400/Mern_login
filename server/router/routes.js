@@ -2,12 +2,14 @@ const express = require("express");
 const { registered, login, getUser, generateOTP, vertifyOTP, createreset, updateUser, resetPassword, verifyUser } = require("../controller/appcontroller");
 const { Auth,localVariable } = require("../middleware/auth");
 const router = express.Router();
+require("dotenv").config();
 
 
+const {registerMail} = require("../controller/mailer")
 // post routes
 router.post("/registered", registered);
 
-// router.post("/registratemail");
+router.post("/registratemail",registerMail);
 
 router.post("/login", verifyUser, login);
 
