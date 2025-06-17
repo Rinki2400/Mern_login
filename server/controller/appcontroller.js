@@ -115,16 +115,14 @@ const getUser = async (req, res) => {
 };
 // for login api http://localhost:8080/api/generateOTP
 const generateOTP = async (req, res) => {
-  req.app.locals.OTP =  otpGenerator.generate(6, {
+  req.app.locals.OTP = otpGenerator.generate(6, {
     lowerCaseAlphabets: false,
     upperCaseAlphabets: false,
     specialChars: false,
   });
-  console.log("Generated OTP:", req.app.locals.OTP)
+  console.log("Generated OTP:", req.app.locals.OTP);
   res.status(201).send({ code: req.app.locals.OTP });
 };
-
-
 
 // for login api http://localhost:8080/api/vertifyOTP
 const vertifyOTP = (req, res) => {
@@ -132,9 +130,9 @@ const vertifyOTP = (req, res) => {
   if (parseInt(req.app.locals.OTP) === parseInt(code)) {
     req.app.locals.OTP = null; // reset the OTP value
     req.app.locals.resetSession = true; // start session for reset password
-    return res.status(201).send({msg:"Vertified Succesfully"})
-  } 
-  return res.status(400).send({ error: "Invalid OTP"});
+    return res.status(201).send({ msg: "Vertified Succesfully" });
+  }
+  return res.status(400).send({ error: "Invalid OTP" });
 };
 
 // for login api http://localhost:8080/api/createreset
@@ -166,8 +164,25 @@ const updateUser = async (req, res) => {
 };
 
 // for login api http://localhost:8080/api/resetPassword
-const resetPassword = (req, res) => {
-  res.status(200).send("resetPassword page");
+const resetPassword = async (req, res) => {
+  try {
+   
+
+    const { username, password } = req.body;
+    const user = await UserModel.findOne({ username });
+
+    if (!user) {
+      return res.status(404).send({ error: "Username not found!" });
+    }
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+    await UserModel.updateOne({ username }, { password: hashedPassword });
+
+    req.app.locals.resetSession = false; // Reset session
+    return res.status(201).send({ msg: "Password updated successfully!" });
+  } catch (error) {
+    return res.status(500).send({ error: error.message || "Internal Server Error" });
+  }
 };
 module.exports = {
   registered,

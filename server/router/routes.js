@@ -25,5 +25,5 @@ router.get("/createreset", createreset);
 // put router
 router.put("/updateUser/:id",Auth, updateUser);
 
-router.put("/resetPassword", resetPassword);
+router.put("/resetPassword",verifyUser, resetPassword);
 module.exports = router;
