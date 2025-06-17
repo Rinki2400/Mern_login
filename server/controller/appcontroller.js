@@ -1,6 +1,8 @@
 const UserModel = require("../model/User.model");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const otpGenerator = require('otp-generator');
+
 
 const JWT_SECRET = "thisIsYourSuperSecretKey123!";
 
@@ -113,12 +115,15 @@ const getUser = async (req, res) => {
   }
 };
 // for login api http://localhost:8080/api/generateOTP
-const generateOTP = (req, res) => {
-  res.status(200).send("generateOTP page");
+const generateOTP = async (req, res) => {
+  req.app.locals  = await otpGenerator.generate( 6 ,{ lowerCaseAlphabets:false,upperCaseAlphabets:false, specialChars :false });
+  res.status(201).send({ code:req.app.locals.OTP})
+
 };
 // for login api http://localhost:8080/api/vertifyOTP
 const vertifyOTP = (req, res) => {
-  res.status(200).send("vertifyOTP page");
+  const {code} = req.query;
+  
 };
 
 // for login api http://localhost:8080/api/createreset

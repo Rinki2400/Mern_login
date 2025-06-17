@@ -22,4 +22,16 @@ const Auth = async (req, res, next) => {
   }
 };
 
-module.exports = { Auth };
+const localVariable = async (req, res, next) => {
+    try {
+        req.app.locals = {
+            OTP: null,
+            resetSession: false
+        };
+        next();
+    } catch (error) {
+        console.error("Error in localVariable middleware:", error);
+        res.status(500).json({ error: "Internal Server Error" });
+    }
+};
+module.exports = { Auth, localVariable};

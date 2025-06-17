@@ -1,6 +1,6 @@
 const express = require("express");
 const { registered, registratemail, login, getUser, generateOTP, vertifyOTP, createreset, updateUser, resetPassword, verifyUser } = require("../controller/appcontroller");
-const { Auth } = require("../middleware/auth");
+const { Auth,localVariable } = require("../middleware/auth");
 const router = express.Router();
 
 
@@ -17,7 +17,7 @@ res.send(""));
 // get routes
 
 router.get("/user/:username", getUser);
-router.get("/generateOTP", generateOTP);
+router.get("/generateOTP",verifyUser,localVariable,generateOTP);
 router.get("/vertifyOTP", vertifyOTP);
 
 router.get("/createreset", createreset);
