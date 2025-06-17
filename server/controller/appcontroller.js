@@ -1,8 +1,7 @@
 const UserModel = require("../model/User.model");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-const otpGenerator = require('otp-generator');
-
+const otpGenerator = require("otp-generator");
 
 const JWT_SECRET = "thisIsYourSuperSecretKey123!";
 
@@ -116,14 +115,26 @@ const getUser = async (req, res) => {
 };
 // for login api http://localhost:8080/api/generateOTP
 const generateOTP = async (req, res) => {
-  req.app.locals  = await otpGenerator.generate( 6 ,{ lowerCaseAlphabets:false,upperCaseAlphabets:false, specialChars :false });
-  res.status(201).send({ code:req.app.locals.OTP})
-
+  req.app.locals.OTP =  otpGenerator.generate(6, {
+    lowerCaseAlphabets: false,
+    upperCaseAlphabets: false,
+    specialChars: false,
+  });
+  console.log("Generated OTP:", req.app.locals.OTP)
+  res.status(201).send({ code: req.app.locals.OTP });
 };
+
+
+
 // for login api http://localhost:8080/api/vertifyOTP
 const vertifyOTP = (req, res) => {
-  const {code} = req.query;
-  
+  const { code } = req.query;
+  if (parseInt(req.app.locals.OTP) === parseInt(code)) {
+    req.app.locals.OTP = null; // reset the OTP value
+    req.app.locals.resetSession = true; // start session for reset password
+    return res.status(201).send({msg:"Vertified Succesfully"})
+  } 
+  return res.status(400).send({ error: "Invalid OTP"});
 };
 
 // for login api http://localhost:8080/api/createreset
