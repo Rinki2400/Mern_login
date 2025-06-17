@@ -1,5 +1,5 @@
 const express = require("express");
-const { registered, registratemail, login, getUser, generateOTP, vertifyOTP, createreset, updateUser, resetPassword, verifyUser } = require("../controller/appcontroller");
+const { registered, login, getUser, generateOTP, vertifyOTP, createreset, updateUser, resetPassword, verifyUser } = require("../controller/appcontroller");
 const { Auth,localVariable } = require("../middleware/auth");
 const router = express.Router();
 
@@ -7,7 +7,7 @@ const router = express.Router();
 // post routes
 router.post("/registered", registered);
 
-router.post("/registratemail", registratemail);
+// router.post("/registratemail");
 
 router.post("/login", verifyUser, login);
 

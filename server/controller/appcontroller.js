@@ -86,10 +86,7 @@ const login = async (req, res) => {
   }
 };
 
-// for login api http://localhost:8080/api/registratemail
-const registratemail = (req, res) => {
-  res.status(200).send("registratemail page");
-};
+
 
 // for login api http://localhost:8080/api/user/exampl121
 const getUser = async (req, res) => {
@@ -137,7 +134,10 @@ const vertifyOTP = (req, res) => {
 
 // for login api http://localhost:8080/api/createreset
 const createreset = (req, res) => {
-  res.status(200).send("createreset page");
+  if (req.app.locals.resetSession) {
+    return res.status(201).send({ flag: req.app.locals.resetSession });
+  }
+  return res.status(440).send({ error: "Session expired!" });
 };
 
 // for login api http://localhost:8080/api/updateUser/:id
@@ -166,7 +166,9 @@ const updateUser = async (req, res) => {
 // for login api http://localhost:8080/api/resetPassword
 const resetPassword = async (req, res) => {
   try {
-   
+    if (!req.app.locals.resetSession) {
+      return res.status(440).send({ error: "Session expired!" });
+    }
 
     const { username, password } = req.body;
     const user = await UserModel.findOne({ username });
@@ -181,13 +183,14 @@ const resetPassword = async (req, res) => {
     req.app.locals.resetSession = false; // Reset session
     return res.status(201).send({ msg: "Password updated successfully!" });
   } catch (error) {
-    return res.status(500).send({ error: error.message || "Internal Server Error" });
+    return res
+      .status(500)
+      .send({ error: error.message || "Internal Server Error" });
   }
 };
 module.exports = {
   registered,
   login,
-  registratemail,
   getUser,
   generateOTP,
   vertifyOTP,
