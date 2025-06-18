@@ -1,6 +1,6 @@
 import React from "react";
-import avatar from '../assets/profile.png';
-import { Link, useNavigate } from 'react-router-dom'
+// import avatar from '../assets/profile.png';
+import {  useNavigate } from 'react-router-dom'
 // import { resetPasswordValidation } from '../helper/validator' 
 import { Toaster } from 'react-hot-toast';
 import { useFormik } from 'formik';
