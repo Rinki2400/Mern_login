@@ -1,7 +1,7 @@
 const nodemailer = require("nodemailer");
 const Mailgen = require("mailgen");
 
-const {ENV} = require("../config").default;
+const {ENV} = require('../config')
 
 // Configure the email transporter
 const nodeConfig = {
@@ -9,7 +9,7 @@ const nodeConfig = {
   port: 587,
   secure: false, // true for 465, false for other ports
   auth: {
-    user: ENV.EMAIL, // generated ethereal user
+    user:ENV.EMAIL, // generated ethereal user
     pass: ENV.PASSWORD, // generated ethereal password
   },
 };

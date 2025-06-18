@@ -1,20 +1,19 @@
 import toast from "react-hot-toast";
+import {authenticate}  from  "./helper"
 
+export async function usernameValidate(values) {
+  const errors = usernameVerify({}, values);
 
-
-export function usernameValidate(values) {
-  const errors = {};
-
-  if (!values.username) {
-    errors.username = "Username is required";
-    toast.error(errors.username);
-  } else if (values.username.length < 3) {
-    errors.username = "Username must be at least 3 characters";
-    toast.error(errors.username);
+  if (values.username) {
+    const { status } = await authenticate(values.username);
+    if (status !== 200) {
+      errors.exist = toast.error("User doesn't exist");
+    }
   }
 
   return errors;
 }
+
 
 /** validate password */
 export async function passwordValidate(values){
