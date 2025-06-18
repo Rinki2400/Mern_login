@@ -79,7 +79,7 @@ const login = async (req, res) => {
     );
 
     res
-      .status(200)
+      .status(201)
       .send({ msg: "Login Successful", username: user.username, token });
   } catch (error) {
     res.status(500).send({ error: error.message || "Login failed" });

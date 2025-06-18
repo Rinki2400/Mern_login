@@ -1,31 +1,39 @@
 const express = require("express");
-const { registered, login, getUser, generateOTP, vertifyOTP, createreset, updateUser, resetPassword, verifyUser } = require("../controller/appcontroller");
-const { Auth,localVariable } = require("../middleware/auth");
+const {
+  registered,
+  login,
+  getUser,
+  generateOTP,
+  vertifyOTP,
+  createreset,
+  updateUser,
+  resetPassword,
+  verifyUser,
+} = require("../controller/appcontroller");
+const { Auth, localVariable } = require("../middleware/auth");
 const router = express.Router();
 require("dotenv").config();
 
-
-const {registerMail} = require("../controller/mailer")
+const { registerMail } = require("../controller/mailer");
 // post routes
 router.post("/registered", registered);
 
-router.post("/registratemail",registerMail);
-
+router.post("/registratemail", registerMail);
 router.post("/login", verifyUser, login);
-
-router.post("/authenticate", (req,res) =>
-res.send(""));
+router.post("/authenticate", verifyUser, (req, res) => {
+  res.end();
+});
 
 // get routes
 
 router.get("/user/:username", getUser);
-router.get("/generateOTP",verifyUser,localVariable,generateOTP);
+router.get("/generateOTP", verifyUser, localVariable, generateOTP);
 router.get("/vertifyOTP", vertifyOTP);
 
-router.get("/createreset", createreset);
+router.get("/createreset", verifyUser,createreset);
 
 // put router
-router.put("/updateUser/:id",Auth, updateUser);
+router.put("/updateUser/:id", Auth, updateUser);
 
-router.put("/resetPassword",verifyUser, resetPassword);
+router.put("/resetPassword", verifyUser, resetPassword);
 module.exports = router;
