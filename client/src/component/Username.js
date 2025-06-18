@@ -4,7 +4,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import { usernameValidate } from '../helper/validator' 
 import { Toaster } from 'react-hot-toast';
 import { useFormik } from 'formik';
-// import { useAuthStore } from '../store/store'
+import { useAuthStore } from '../store/store'
 
 function Username() {
   const navigate= useNavigate()
@@ -17,7 +17,7 @@ function Username() {
     validateOnBlur: false,
     validateOnChange: false,
    
-    onSubmit : values => {
+    onSubmit : async values => {
       // setUsername(values.username);
       navigate('/password')
     }
