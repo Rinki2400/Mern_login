@@ -1,14 +1,13 @@
-import React, { useState } from "react";
-import avatar from "../assets/profile.png";
-import { Link, useNavigate } from "react-router-dom";
+import React  from "react";
+import { useNavigate } from "react-router-dom";
 
-import toast, { Toaster } from "react-hot-toast";
+import  { Toaster } from "react-hot-toast";
 import { useFormik } from "formik";
 // import { useAuthStore } from '../store/store'
 
 function Recover() {
   const navigate = useNavigate();
-  const [OTP, setOTP] = useState();
+  // const [OTP, setOTP] = useState();
   // const setUsername = useAuthStore(state => state.setUsername);
   const formik = useFormik({
     initialValues: {
