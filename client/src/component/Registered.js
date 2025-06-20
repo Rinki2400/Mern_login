@@ -20,13 +20,18 @@ function Registered() {
     validateOnBlur: false,
     validateOnChange: false,
     onSubmit: async (values) => {
-      values = await Object.assign(values, { profile: file || "" });
-      let registeredPromise = registeredUser(values);
-      toast.promise(registeredPromise, {
-        loading: "Creating...",
-        success: <b>Register Successfully ....!</b>,
-        error : <b>Could not Register.</b>
-      });
+      values = Object.assign(values, { profile: file || "" });
+
+      try {
+        toast.loading("Creating...");
+        const response = await registeredUser(values);
+        toast.dismiss();
+        toast.success(<b>Register Successfully ....!</b>);
+        navigate("/");
+      } catch (error) {
+        toast.dismiss();
+        toast.error(<b>Could not Register.</b>);
+      }
     },
   });
 

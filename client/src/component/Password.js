@@ -31,6 +31,7 @@ function Password() {
 
         toast.dismiss();
         toast.success(<b>Login Successfully...!</b>);
+ 
 
         const { token } = res.data;
         localStorage.setItem("token", token);
