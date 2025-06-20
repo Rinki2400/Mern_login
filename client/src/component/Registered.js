@@ -25,6 +25,7 @@ function Registered() {
       try {
         toast.loading("Creating...");
         const response = await registeredUser(values);
+        console.log(response)
         toast.dismiss();
         toast.success(<b>Register Successfully ....!</b>);
         navigate("/");
