@@ -11,7 +11,7 @@ import { useAuthStore } from "../store/store";
 function Password() {
   const navigate = useNavigate();
   const { username } = useAuthStore((state) => state.auth);
- const [{ isLoading, apiData, serverError }] = useFetch(`/user/${username}`)
+ const [{ isLoading, apiData, serverError }] = useFetch(`/api/user/${username}`)
   const formik = useFormik({
     initialValues: {
       password: "",
@@ -40,16 +40,16 @@ function Password() {
     },
   });
 
-  // if (isLoading)
-  //   return (
-  //     <div className="d-flex justify-content-center align-items-center vh-100">
-  //       <div className="text-center">
-  //         <div className="spinner-border text-primary me-2" role="status"></div>
-  //         Loading...
-  //       </div>
-  //     </div>
-  //   );
-  // if (serverError) return <h1 className="text-xl text-red-500">{serverError.message}</h1>;
+  if (isLoading)
+    return (
+      <div className="d-flex justify-content-center align-items-center vh-100">
+        <div className="text-center">
+          <div className="spinner-border text-primary me-2" role="status"></div>
+          Loading...
+        </div>
+      </div>
+    );
+  if (serverError) return <h1 className="text-xl text-red-500">{serverError.message}</h1>;
 
   return (
     <>
