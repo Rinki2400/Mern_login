@@ -1,5 +1,5 @@
 import React from "react";
-import avatar from "../assets/profile.png";
+import avatar from "../assets/avatar_2.jpeg";
 import { Link, useNavigate } from "react-router-dom";
 import { passwordValidate } from "../helper/validator";
 import toast, { Toaster } from "react-hot-toast";
@@ -11,7 +11,9 @@ import { useAuthStore } from "../store/store";
 function Password() {
   const navigate = useNavigate();
   const { username } = useAuthStore((state) => state.auth);
- const [{ isLoading, apiData, serverError }] = useFetch(`/api/user/${username}`)
+  const [{ isLoading, apiData, serverError }] = useFetch(
+    `/api/user/${username}`
+  );
   const formik = useFormik({
     initialValues: {
       password: "",
@@ -49,7 +51,8 @@ function Password() {
         </div>
       </div>
     );
-  if (serverError) return <h1 className="text-xl text-red-500">{serverError.message}</h1>;
+  if (serverError)
+    return <h1 className="text-xl text-red-500">{serverError.message}</h1>;
 
   return (
     <>
@@ -60,7 +63,9 @@ function Password() {
           style={{ minWidth: "320px", borderRadius: "12px" }}
         >
           <div className="text-center mb-4">
-            <h2 className="display-5 fw-bold">Hello {apiData?.firstName|| apiData?.username}</h2>
+            <h2 className="display-5 fw-bold">
+              Hello {apiData?.firstName || apiData?.username || "Guest"}
+            </h2>
             <span className="d-block py-2 fs-7 text-secondary">
               Explore More by connecting with us.
             </span>
