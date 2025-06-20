@@ -143,23 +143,26 @@ const createreset = (req, res) => {
 // for login api http://localhost:8080/api/updateUser/:id
 const updateUser = async (req, res) => {
   try {
-    if (req.user.userId !== req.params.id) {
-      return res.status(403).json({ error: "Unauthorized update attempt" });
+    const { userId } = req.user; // Extracted from token middleware
+
+    if (!userId) {
+      return res.status(401).json({ error: "Unauthorized: No user ID found" });
     }
 
     const updatedUser = await UserModel.findByIdAndUpdate(
-      req.params.id,
+      userId,
       req.body,
       { new: true }
     );
 
     if (!updatedUser) {
-      return res.status(404).json({ message: "User not found" });
+      return res.status(404).json({ error: "User not found" });
     }
 
-    res.send({ msg: "Record Updated" });
+    res.status(200).json({ msg: "Record Updated", user: updatedUser });
   } catch (error) {
-    res.status(500).json({ message: "Server error", error });
+    console.error("Update error:", error);
+    res.status(500).json({ error: "Server error" });
   }
 };
 

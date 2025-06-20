@@ -33,7 +33,7 @@ router.get("/vertifyOTP", vertifyOTP);
 router.get("/createreset", verifyUser,createreset);
 
 // put router
-router.put("/updateUser/:id", Auth, updateUser);
+router.put("/updateUser", Auth, updateUser);
 
 router.put("/resetPassword", verifyUser, resetPassword);
 module.exports = router;
