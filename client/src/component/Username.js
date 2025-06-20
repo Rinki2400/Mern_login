@@ -66,7 +66,7 @@ function Username() {
               type="submit"
               className="btn btn-primary w-100 fw-bold py-2"
             >
-              Submit
+              Let Go
             </button>
             <div className="text-center py-4">
               <span className="text-secondary">
