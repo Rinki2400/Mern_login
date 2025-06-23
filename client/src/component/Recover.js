@@ -1,28 +1,56 @@
-import React  from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-
-import  { Toaster } from "react-hot-toast";
-import { useFormik } from "formik";
-// import { useAuthStore } from '../store/store'
+import toast, { Toaster } from "react-hot-toast";
+import { useAuthStore } from "../store/store";
+import { generateOTP, verifyOTP } from "../helper/helper";
 
 function Recover() {
   const navigate = useNavigate();
-  // const [OTP, setOTP] = useState();
-  // const setUsername = useAuthStore(state => state.setUsername);
-  const formik = useFormik({
-    initialValues: {
-      OTP: "1243344",
-    },
+  const [OTP, setOTP] = useState();
+  const username = useAuthStore((state) => state.auth.username);
+  useEffect(() => {
+    if (username) {
+      generateOTP(username).then((OTP) => {
+        console.log(OTP);
+        OTP
+          ? toast.success("OTP has been sent to your email")
+          : toast.error("Problem while generating OTP");
+      });
+    }
+  }, [username]);
 
-    validateOnBlur: false,
-    validateOnChange: false,
+async function onSubmit(e){
+    e.preventDefault();
+    try {
+      let { status } = await verifyOTP({ username, code : OTP })
+      if(status === 201){
+        toast.success('Verify Successfully!')
+        return navigate('/reset')
+      }  
+    } catch (error) {
+      return navigate('/reset')
 
-    onSubmit() {
-     
-      return navigate("/reset");
-    },
-  });
+    }
+  }
+  
+async function resendOTP() {
+  if (!username) {
+    toast.error("Username is not available!");
+    console.error("Missing username during OTP resend.");
+    return;
+  }
 
+  const toastId = toast.loading("Sending...");
+
+  try {
+    const OTP = await generateOTP(username);
+    toast.success("OTP has been sent to your email!", { id: toastId });
+    console.log("Resent OTP:", OTP);
+  } catch (error) {
+    toast.error("Could not send OTP!", { id: toastId });
+    console.error("OTP resend error:", error);
+  }
+}
   return (
     <>
       <Toaster position="top-center" reverseOrder={false} />
@@ -37,7 +65,7 @@ function Recover() {
               Enter OTP to recover password.
             </span>
           </div>
-          <form onSubmit={formik.handleSubmit}>
+          <form onSubmit={onSubmit}>
             <div className="mb-4">
               <p className="text-muted small text-left">
                 Enter the 6-digit OTP sent to your email address.
@@ -47,7 +75,7 @@ function Recover() {
                 className="form-control"
                 id="username"
                 placeholder="Enter OTP"
-                {...formik.getFieldProps("OTP")}
+                onChange={(e) => setOTP(e.target.value)}
               />
             </div>
             <button
@@ -62,6 +90,7 @@ function Recover() {
                 <span
                   className="text-danger fw-semibold text-decoration-none"
                   style={{ cursor: "pointer" }}
+                  onClick={resendOTP}
                   // onClick={handleResendOTP} // Add your resend handler here
                 >
                   Resend

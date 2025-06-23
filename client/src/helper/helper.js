@@ -109,17 +109,19 @@ export async function generateOTP(username) {
 }
 
 /** verify OTP */
-export async function vertifyOTP({ username, code }) {
-  try {
-    const { data, status } = await axios.get("/api/vertifyOTP", {
-      params: { username, code },
-    });
-    return { data, status };
-  } catch (error) {
-    return { error };
-  }
+export async function verifyOTP({ username, code }){
+    try {
+       const { data, status } = await axios.get('/api/verifyOTP', { params : { username, code }})
+        if (status !== 201) {
+            return Promise.reject("Invalid OTP");
+        } 
+       return { data, status }
+    } catch (error) {
+        return Promise.reject(error);
+    }
 }
-/**Reset Password */
+
+
 export async function resetPassword({ username, password }) {
   try {
     const { data, status } = await axios.put("/api/resetPassword", {

@@ -28,9 +28,9 @@ router.post("/authenticate", verifyUser, (req, res) => {
 
 router.get("/user/:username", getUser);
 router.get("/generateOTP", verifyUser, localVariable, generateOTP);
-router.get("/vertifyOTP", vertifyOTP);
+router.get("/vertifyOTP", verifyUser,vertifyOTP);
 
-router.get("/createreset", verifyUser,createreset);
+router.get("/createreset",createreset);
 
 // put router
 router.put("/updateUser", Auth, updateUser);
